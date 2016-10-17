@@ -1,0 +1,91 @@
+* {
+    box-sizing: border-box;
+}
+html {
+}
+body, ul, li {
+    border: 0 none;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: ubuntu,helvetica,arial;
+    font-size: 12px;
+    overflow: hidden;
+}
+#header {
+    background: #cd235c none repeat scroll 0 0;
+    color: #eee;
+    font-size: 20px;
+    font-weight: bold;
+    height: 45px;
+    left: 0;
+    line-height: 45px;
+    padding: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+#footer {
+    font-size: 20px;
+    background: #444 none repeat scroll 0 0;
+    border-top: 1px solid #444;
+    bottom: 0;
+    height: 48px;
+    left: 0;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+#footer .button{
+    font-size: 12px;
+    flex:1;
+    color:white;
+    text-align: center;
+    display:inline-flex ;
+    justify-content: center;
+     align-items: center;
+      flex-direction: column;
+}
+#wrapper {
+    background: #ccc none repeat scroll 0 0;
+    bottom: 48px;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 45px;
+    width: 100%;
+    z-index: 1;
+}
+#scroller {
+    -moz-text-size-adjust: none;
+    -moz-user-select: none;
+    position: absolute;
+    transform: translateZ(0px);
+    width: 100%;
+    z-index: 1;
+}
+#scroller ul {
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+    color: red;
+}
+#scroller li {
+    background-color: #fafafa;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #fff;
+    font-size: 14px;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px;
+}
