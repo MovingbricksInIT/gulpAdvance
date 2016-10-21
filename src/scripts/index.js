@@ -13,12 +13,11 @@ $("#enter").tap(function(){
 	$('#mainContent').show();
 	$('.swiper-container').hide();
 
-
-	$.post('/api/skill',{},function(response)
-	{
-		var html = "";
+$.post('/api/product',{},function(response){
+		var html='';
+		// response=JSON.parse(response);
 		for (var i = 0; i < response.length; i++) {
-			html +="<li>" +response[i].category+"</li>"
+			html+='<li><img src='+response[i].img+'></li>';
 		};
 		$("#scroller ul").html(html);
 		console.log(html)
@@ -54,11 +53,34 @@ $('.button').tap(function(){
 })
 //tab切换内容获取和循环赋值到ul中
 function pageload(app){
-	$.post('api/'+app,{},function(response){
+	$.post('/api/'+app,{},function(response){
 		var html='';
-		for(var i=0;i<response.length;i++){
+		// response=JSON.parse(response);
+		if (app=="product") {
+			for(var i=0;i<response.length;i++){
+			html+='<li style="height:15em;"><img src='+response[i].img+'></li>';
+			};
+		}
+		else if (app=="project"){
+			for(var i=0;i<response.length;i++){
 			html+='<li>'+response[i].category+'</li>';
-		};
+			};	
+		}
+		else if (app=="skill"){
+			for(var i=0;i<response.length;i++){
+			html+='<li>'+response[i].category+'</li>';
+			};	
+		}
+		else if (app=="work"){
+			for(var i=0;i<response.length;i++){
+			html+='<li>'+response[i].category+'</li>';
+			};	
+		}
+		else if (app=="me"){
+			for(var i=0;i<response.length;i++){
+			html+='<li>'+response[i].category+'</li>';
+			};	
+		}
 		$('#scroller ul').html(html);
 		myScroll=new IScroll('#wrapper',{mouseWheel:true})
 		document.addEventListener('touchmove',function(e){e.preventDefault();},false)

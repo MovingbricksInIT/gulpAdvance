@@ -71,6 +71,18 @@ gulp.task('webserver', function() {
               res.end(data);
             });
             return;
+          case '/api/me':
+            res.setHeader('Content-Type','application/json');   
+            fs.readFile('mock/me.json','utf-8',function(err,data){
+              res.end(data);
+            });
+            return;
+          case '/api/product':
+            res.setHeader('Content-Type','application/json');   
+            fs.readFile('mock/product.json','utf-8',function(err,data){
+              res.end(data);
+            });
+            return;
           default:
           ;
         }
