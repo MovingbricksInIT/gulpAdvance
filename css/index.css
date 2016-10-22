@@ -2982,14 +2982,27 @@ body {
   flex-direction: column; }
 
 .firsttop {
-  flex: 1; }
+  -moz-box-flex: 1.0;
+  /*Firefox*/
+  -webkit-box-flex: 1.0;
+  /*Safari,Opera,Chrome*/
+  box-flex: 1.0; }
 
 .firstcontent {
-  flex: 4;
-  width: 60%; }
+  -moz-box-flex: 4.0;
+  /*Firefox*/
+  -webkit-box-flex: 4.0;
+  /*Safari,Opera,Chrome*/
+  box-flex: 4.0;
+  width: 60%;
+  margin: 0 auto; }
 
 .firstbottom {
-  flex: 6;
+  -moz-box-flex: 6.0;
+  /*Firefox*/
+  -webkit-box-flex: 6.0;
+  /*Safari,Opera,Chrome*/
+  box-flex: 6.0;
   color: #ffffff; }
 
 img {

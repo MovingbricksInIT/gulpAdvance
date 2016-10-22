@@ -66,11 +66,11 @@
 		$('#mainContent').show();
 		$('.swiper-container').hide();
 
-	$.post('/api/product',{},function(response){
+	$.getJSON('https://gegeaiqianduan.github.io/gulpAdvance/mock/product.json',{},function(response){
 			var html='';
 			// response=JSON.parse(response);
 			for (var i = 0; i < response.length; i++) {
-				html+='<li><img src='+response[i].img+'></li>';
+				html+='<li style="height:15em;"><img src="'+response[i].img+'"></li>';
 			};
 			$("#scroller ul").html(html);
 			console.log(html)
@@ -106,12 +106,12 @@
 	})
 	//tab切换内容获取和循环赋值到ul中
 	function pageload(app){
-		$.post('/api/'+app,{},function(response){
+		$.getJSON('https://gegeaiqianduan.github.io/gulpAdvance/mock/'+app+'.json',{},function(response){
 			var html='';
 			// response=JSON.parse(response);
 			if (app=="product") {
 				for(var i=0;i<response.length;i++){
-				html+='<li style="height:15em;"><img src='+response[i].img+'></li>';
+				html+='<li style="height:15em;"><img src="'+response[i].img+'"></li>';
 				};
 			}
 			else if (app=="project"){
