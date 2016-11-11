@@ -2994,12 +2994,12 @@ Copyright (c) 2015 Daniel Eden
       transform-origin: 50% 50%; }
     #swiper-one .swiper-one-pic em {
       display: block;
-      width: 150px;
-      height: 150px;
+      width: 100px;
+      height: 100px;
       font-size: 100px;
       position: absolute;
       left: 50%;
-      margin-left: -75px;
+      margin-left: -95px;
       top: 30px;
       color: gold; }
   #swiper-one .swiper-one-txt {
@@ -3310,8 +3310,10 @@ body {
 
 #footer .button {
   flex: 1;
+  height: 100%;
   text-align: center;
-  color: #fff; }
+  color: #fff; 
+  line-height: 48px;}
 
 #wrapper {
   position: absolute;

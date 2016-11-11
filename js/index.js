@@ -93,6 +93,7 @@
 		$("#scroller").show();
 		$("#interestCanvas").hide();
 		var apiTarget = $(this).attr('id');
+		$(this).css("background","#CD235C").siblings().css("background","#444");
 		$("#header").text(apiTarget.toLocaleUpperCase());
 		if(apiTarget =="project" || apiTarget =="work"){
 			$.ajax({url:'./mock/'+apiTarget+'.json',
