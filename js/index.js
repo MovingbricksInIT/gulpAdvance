@@ -51,94 +51,184 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	//引入zepto
 	var $ = __webpack_require__(2);
-	// console.log($)
-	__webpack_require__(11);
-	module.exports = $;
 	var IScroll = __webpack_require__(12);
-	 // console.log(IScroll)
+
 
 	$('#mainContent').hide();
-	$('.swiper-container').show();
-
+	$(".swiper-container").show();
 
 	$("#enter").tap(function(){
 		$('#mainContent').show();
-		$('.swiper-container').hide();
+		$(".swiper-container").hide();
+		postSkill();
+	})
 
-	$.getJSON('https://gegeaiqianduan.github.io/gulpAdvance/mock/product.json',{},function(response){
-			var html='';
-			// response=JSON.parse(response);
-			for (var i = 0; i < response.length; i++) {
-				html+='<li style="height:15em;"><img src="'+response[i].img+'"></li>';
-			};
-			$("#scroller ul").html(html);
-			console.log(html)
-			myScroll =new IScroll('#wrapper',{mouseWheel:true})
-		document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-		})
-
-		
-	});
-	// console.log($("#enter"))
-	var Swiper=__webpack_require__(13);
-
+	//引入swiper
+	var Swiper = __webpack_require__(13);
+	//引入swiper animate
 	var SwiperAnimate = __webpack_require__(14);
-	// console.log(SwiperAnimate)
-	var mySwiper = new Swiper('.swiper-container', {
-	    onInit: function(swiper) { //Swiper2.x的初始化是onFirstInit
-	        SwiperAnimate.swiperAnimateCache(swiper); //隐藏动画元素 
-	        SwiperAnimate.swiperAnimate(swiper); //初始化完成开始动画
-	    },
-	    onSlideChangeEnd: function(swiper) {
-	        SwiperAnimate.swiperAnimate(swiper); //每个slide切换结束时也运行当前slide动画
-	    }
+
+	var mySwiper = new Swiper ('.swiper-container', {
+		pagination: '.swiper-pagination',
+		paginationType : 'custom',
+	  	paginationCustomRender: function (swiper, current, total) {
+	    	return current + ' / ' + total;
+	  	},
+	  	//effect:'flip',
+	  	observer:true,
+	  	observeParents:true,
+		onInit: function(swiper){ //Swiper2.x的初始化是onFirstInit
+			SwiperAnimate.swiperAnimateCache(swiper); //隐藏动画元素 
+			SwiperAnimate.swiperAnimate(swiper); //初始化完成开始动画
+		}, 
+		onSlideChangeEnd: function(swiper){ 
+			SwiperAnimate.swiperAnimate(swiper); //每个slide切换结束时也运行当前slide动画
+		}
+	})
+	//使用  flip 效果还是有点小BUG，把页面拖到中间就会是运动持续下去
+
+	$("#footer div").tap(function(){
+		$("#scroller").show();
+		$("#interestCanvas").hide();
+		var apiTarget = $(this).attr('id');
+		$("#header").text(apiTarget.toLocaleUpperCase());
+		if(apiTarget =="project" || apiTarget =="work"){
+			$.ajax({url:'./mock/'+apiTarget+'.json',
+				dataType:"json",
+				success:function(response){
+					console.log(response);
+					var html="<div class='project'>"
+					for(var i=0;i<response.length;i++){			
+						html+='<h5>'+response[i].name+'</h5>';
+						html+='<div class="projectImg"><img src="'+response[i].image+'" /></div>';
+						html+='<div class="projectDec">'+response[i].description+'</div>';
+						html+='<div>'+response[i].skill+'</div>';
+						html+='<div>'+response[i].total+'</div>';
+					}
+					html+="</div>";
+					$("#scroller").html(html);
+
+					var myScroll = new IScroll('#wrapper',{mouseWheel:true});
+					document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+				}
+			})
+		}
+		//interest
+		if(apiTarget =="interest"){
+			$("#scroller").hide();
+			$("#interestCanvas").show();
+			var canEle=document.getElementById('interestCanvas');
+			var ctx=canEle.getContext("2d");
+			var width=400;
+			var height=400;
+			var colorArr=["#8A2BE2","#7FFF00","#6495ED","#FF7F50","#DC143C","#FF1493","#ADFF2F","#FF69B4"];
+			var textArr=[
+				"我喜欢阅读",
+				"喜欢打乒乓球",
+				"我还喜欢听音乐",
+				"我更加喜欢敲代码",
+				"我爱好广泛",
+				"看动漫",
+				"多谢您的关注",
+				"做事情全心全意",
+				"活到老 学到老",
+				"志之难也 不在胜人 在自胜",
+				"没有一劳永逸的开始；也没有无法拯救的结束。",
+				"我要做极客",
+				"努力 加油"
+			]
+			canEle.width=width;
+			canEle.height=height;
+			var image=new Image();
+
+			ctx.font = "25px Courier New";
+			var numArrL=[80,100,5,300,500,430];//初始的X
+			var numArrT=[80,100,20,300,380,210];//初始的Y
+			setInterval(function(){
+			ctx.clearRect(0,0,canEle.width,canEle.height);
+			ctx.save();
+			for(var j=0;j<textArr.length;j++){
+				numArrL[j]-=(j+1)*0.6;
+				ctx.fillStyle = colorArr[j]
+				ctx.fillText(textArr[j],numArrL[j],numArrT[j]);
+			}
+			for(var i=0;i<textArr.length;i++){
+				if(numArrL[i]<=-500){
+					numArrL[i]=canEle.width;
+				}
+			}
+			ctx.restore();
+			},20)
+		}
+		if(apiTarget =="mine"){
+			$.ajax({url:'./mock/'+apiTarget+'.json',
+				dataType:"json",
+				success:function(response){
+					console.log(response);
+					var html="<div class='mine'>"
+					for(var i=0;i<response.length;i++){			
+						html+='<p>'+response[i].category+'</p>';
+					}
+					html+="</div>";
+					$("#scroller").html(html);
+
+					var myScroll = new IScroll('#wrapper',{mouseWheel:true});
+					document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+				}
+			})
+		}
+	})
+	$("#skill").tap(function(){
+		postSkill();
 	})
 
-	// console.log(mySwiper)
+	//预加载
+	var interval = setInterval(function(){
+		if(document.readyState==='complete'){
+			clearInterval(interval);
+			$("#preload").hide();
+			$(".swiper-container").show();
+			mySwiper.update();
+		}else{
+			$("#preload").show();
+		}
+	},100);
 
-	// scroll的footer tab切换
-	$('.button').tap(function(){
-		var app=$(this).attr('id');
-		console.log(app);
-		pageload(app);
-		
-	})
-	//tab切换内容获取和循环赋值到ul中
-	function pageload(app){
-		$.getJSON('https://gegeaiqianduan.github.io/gulpAdvance/mock/'+app+'.json',{},function(response){
-			var html='';
-			// response=JSON.parse(response);
-			if (app=="product") {
-				for(var i=0;i<response.length;i++){
-				html+='<li style="height:15em;"><img src="'+response[i].img+'"></li>';
-				};
+	//swiper-three的各自运动
+	var swiperThreeP=$(".swiper-three p");
+	for(var i=0;i<swiperThreeP.length;i++){
+		var swiperThreePTime=(2*i)/10;
+		swiperThreeP.eq(i).attr({"class":"ani","swiper-animate-effect":"rollIn","swiper-animate-duration":"0.2s","swiper-animate-delay":(swiperThreePTime+"s")});
+	};
+
+	function postSkill(){
+		$.ajax({url:'./mock/skill.json',
+			dataType:"json",
+			success:function(response){
+				var html=""
+				for(var i=0;i<response.length;i++){			
+					html+="<dl>";
+					html+='<dt><img src="'+response[i].imagesrc+'"></dt>';		
+					html+='<dd style="font-size:18px;font-weight:900">'+response[i].category+'</dd>';
+					html+='<dd>'+response[i].name+'</dd>';
+					html+='<dd>'+response[i].lastText+'</dd>';
+					html+="</dl>";
+				}
+				$("#scroller").html(html);
+
+				var myScroll = new IScroll('#wrapper',{mouseWheel:true});
+				document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 			}
-			else if (app=="project"){
-				for(var i=0;i<response.length;i++){
-				html+='<li>'+response[i].category+'</li>';
-				};	
-			}
-			else if (app=="skill"){
-				for(var i=0;i<response.length;i++){
-				html+='<li>'+response[i].category+'</li>';
-				};	
-			}
-			else if (app=="work"){
-				for(var i=0;i<response.length;i++){
-				html+='<li>'+response[i].category+'</li>';
-				};	
-			}
-			else if (app=="me"){
-				for(var i=0;i<response.length;i++){
-				html+='<li>'+response[i].category+'</li>';
-				};	
-			}
-			$('#scroller ul').html(html);
-			myScroll=new IScroll('#wrapper',{mouseWheel:true})
-			document.addEventListener('touchmove',function(e){e.preventDefault();},false)
 		})
 	}
+
+
+
+
+
+
 
 
 /***/ },
@@ -146,7 +236,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(3);
-
 	__webpack_require__(4);
 	__webpack_require__(5);
 	__webpack_require__(6);
@@ -154,6 +243,7 @@
 	__webpack_require__(8);
 	__webpack_require__(9);
 	__webpack_require__(10);
+	__webpack_require__(11);
 
 	module.exports = $;
 
@@ -1113,750 +1203,6 @@
 	var Zepto = __webpack_require__(3);
 
 	;(function($){
-	  var _zid = 1, undefined,
-	      slice = Array.prototype.slice,
-	      isFunction = $.isFunction,
-	      isString = function(obj){ return typeof obj == 'string' },
-	      handlers = {},
-	      specialEvents={},
-	      focusinSupported = 'onfocusin' in window,
-	      focus = { focus: 'focusin', blur: 'focusout' },
-	      hover = { mouseenter: 'mouseover', mouseleave: 'mouseout' }
-
-	  specialEvents.click = specialEvents.mousedown = specialEvents.mouseup = specialEvents.mousemove = 'MouseEvents'
-
-	  function zid(element) {
-	    return element._zid || (element._zid = _zid++)
-	  }
-	  function findHandlers(element, event, fn, selector) {
-	    event = parse(event)
-	    if (event.ns) var matcher = matcherFor(event.ns)
-	    return (handlers[zid(element)] || []).filter(function(handler) {
-	      return handler
-	        && (!event.e  || handler.e == event.e)
-	        && (!event.ns || matcher.test(handler.ns))
-	        && (!fn       || zid(handler.fn) === zid(fn))
-	        && (!selector || handler.sel == selector)
-	    })
-	  }
-	  function parse(event) {
-	    var parts = ('' + event).split('.')
-	    return {e: parts[0], ns: parts.slice(1).sort().join(' ')}
-	  }
-	  function matcherFor(ns) {
-	    return new RegExp('(?:^| )' + ns.replace(' ', ' .* ?') + '(?: |$)')
-	  }
-
-	  function eventCapture(handler, captureSetting) {
-	    return handler.del &&
-	      (!focusinSupported && (handler.e in focus)) ||
-	      !!captureSetting
-	  }
-
-	  function realEvent(type) {
-	    return hover[type] || (focusinSupported && focus[type]) || type
-	  }
-
-	  function add(element, events, fn, data, selector, delegator, capture){
-	    var id = zid(element), set = (handlers[id] || (handlers[id] = []))
-	    events.split(/\s/).forEach(function(event){
-	      if (event == 'ready') return $(document).ready(fn)
-	      var handler   = parse(event)
-	      handler.fn    = fn
-	      handler.sel   = selector
-	      // emulate mouseenter, mouseleave
-	      if (handler.e in hover) fn = function(e){
-	        var related = e.relatedTarget
-	        if (!related || (related !== this && !$.contains(this, related)))
-	          return handler.fn.apply(this, arguments)
-	      }
-	      handler.del   = delegator
-	      var callback  = delegator || fn
-	      handler.proxy = function(e){
-	        e = compatible(e)
-	        if (e.isImmediatePropagationStopped()) return
-	        e.data = data
-	        var result = callback.apply(element, e._args == undefined ? [e] : [e].concat(e._args))
-	        if (result === false) e.preventDefault(), e.stopPropagation()
-	        return result
-	      }
-	      handler.i = set.length
-	      set.push(handler)
-	      if ('addEventListener' in element)
-	        element.addEventListener(realEvent(handler.e), handler.proxy, eventCapture(handler, capture))
-	    })
-	  }
-	  function remove(element, events, fn, selector, capture){
-	    var id = zid(element)
-	    ;(events || '').split(/\s/).forEach(function(event){
-	      findHandlers(element, event, fn, selector).forEach(function(handler){
-	        delete handlers[id][handler.i]
-	      if ('removeEventListener' in element)
-	        element.removeEventListener(realEvent(handler.e), handler.proxy, eventCapture(handler, capture))
-	      })
-	    })
-	  }
-
-	  $.event = { add: add, remove: remove }
-
-	  $.proxy = function(fn, context) {
-	    var args = (2 in arguments) && slice.call(arguments, 2)
-	    if (isFunction(fn)) {
-	      var proxyFn = function(){ return fn.apply(context, args ? args.concat(slice.call(arguments)) : arguments) }
-	      proxyFn._zid = zid(fn)
-	      return proxyFn
-	    } else if (isString(context)) {
-	      if (args) {
-	        args.unshift(fn[context], fn)
-	        return $.proxy.apply(null, args)
-	      } else {
-	        return $.proxy(fn[context], fn)
-	      }
-	    } else {
-	      throw new TypeError("expected function")
-	    }
-	  }
-
-	  $.fn.bind = function(event, data, callback){
-	    return this.on(event, data, callback)
-	  }
-	  $.fn.unbind = function(event, callback){
-	    return this.off(event, callback)
-	  }
-	  $.fn.one = function(event, selector, data, callback){
-	    return this.on(event, selector, data, callback, 1)
-	  }
-
-	  var returnTrue = function(){return true},
-	      returnFalse = function(){return false},
-	      ignoreProperties = /^([A-Z]|returnValue$|layer[XY]$|webkitMovement[XY]$)/,
-	      eventMethods = {
-	        preventDefault: 'isDefaultPrevented',
-	        stopImmediatePropagation: 'isImmediatePropagationStopped',
-	        stopPropagation: 'isPropagationStopped'
-	      }
-
-	  function compatible(event, source) {
-	    if (source || !event.isDefaultPrevented) {
-	      source || (source = event)
-
-	      $.each(eventMethods, function(name, predicate) {
-	        var sourceMethod = source[name]
-	        event[name] = function(){
-	          this[predicate] = returnTrue
-	          return sourceMethod && sourceMethod.apply(source, arguments)
-	        }
-	        event[predicate] = returnFalse
-	      })
-
-	      try {
-	        event.timeStamp || (event.timeStamp = Date.now())
-	      } catch (ignored) { }
-
-	      if (source.defaultPrevented !== undefined ? source.defaultPrevented :
-	          'returnValue' in source ? source.returnValue === false :
-	          source.getPreventDefault && source.getPreventDefault())
-	        event.isDefaultPrevented = returnTrue
-	    }
-	    return event
-	  }
-
-	  function createProxy(event) {
-	    var key, proxy = { originalEvent: event }
-	    for (key in event)
-	      if (!ignoreProperties.test(key) && event[key] !== undefined) proxy[key] = event[key]
-
-	    return compatible(proxy, event)
-	  }
-
-	  $.fn.delegate = function(selector, event, callback){
-	    return this.on(event, selector, callback)
-	  }
-	  $.fn.undelegate = function(selector, event, callback){
-	    return this.off(event, selector, callback)
-	  }
-
-	  $.fn.live = function(event, callback){
-	    $(document.body).delegate(this.selector, event, callback)
-	    return this
-	  }
-	  $.fn.die = function(event, callback){
-	    $(document.body).undelegate(this.selector, event, callback)
-	    return this
-	  }
-
-	  $.fn.on = function(event, selector, data, callback, one){
-	    var autoRemove, delegator, $this = this
-	    if (event && !isString(event)) {
-	      $.each(event, function(type, fn){
-	        $this.on(type, selector, data, fn, one)
-	      })
-	      return $this
-	    }
-
-	    if (!isString(selector) && !isFunction(callback) && callback !== false)
-	      callback = data, data = selector, selector = undefined
-	    if (callback === undefined || data === false)
-	      callback = data, data = undefined
-
-	    if (callback === false) callback = returnFalse
-
-	    return $this.each(function(_, element){
-	      if (one) autoRemove = function(e){
-	        remove(element, e.type, callback)
-	        return callback.apply(this, arguments)
-	      }
-
-	      if (selector) delegator = function(e){
-	        var evt, match = $(e.target).closest(selector, element).get(0)
-	        if (match && match !== element) {
-	          evt = $.extend(createProxy(e), {currentTarget: match, liveFired: element})
-	          return (autoRemove || callback).apply(match, [evt].concat(slice.call(arguments, 1)))
-	        }
-	      }
-
-	      add(element, event, callback, data, selector, delegator || autoRemove)
-	    })
-	  }
-	  $.fn.off = function(event, selector, callback){
-	    var $this = this
-	    if (event && !isString(event)) {
-	      $.each(event, function(type, fn){
-	        $this.off(type, selector, fn)
-	      })
-	      return $this
-	    }
-
-	    if (!isString(selector) && !isFunction(callback) && callback !== false)
-	      callback = selector, selector = undefined
-
-	    if (callback === false) callback = returnFalse
-
-	    return $this.each(function(){
-	      remove(this, event, callback, selector)
-	    })
-	  }
-
-	  $.fn.trigger = function(event, args){
-	    event = (isString(event) || $.isPlainObject(event)) ? $.Event(event) : compatible(event)
-	    event._args = args
-	    return this.each(function(){
-	      // handle focus(), blur() by calling them directly
-	      if (event.type in focus && typeof this[event.type] == "function") this[event.type]()
-	      // items in the collection might not be DOM elements
-	      else if ('dispatchEvent' in this) this.dispatchEvent(event)
-	      else $(this).triggerHandler(event, args)
-	    })
-	  }
-
-	  // triggers event handlers on current element just as if an event occurred,
-	  // doesn't trigger an actual event, doesn't bubble
-	  $.fn.triggerHandler = function(event, args){
-	    var e, result
-	    this.each(function(i, element){
-	      e = createProxy(isString(event) ? $.Event(event) : event)
-	      e._args = args
-	      e.target = element
-	      $.each(findHandlers(element, event.type || event), function(i, handler){
-	        result = handler.proxy(e)
-	        if (e.isImmediatePropagationStopped()) return false
-	      })
-	    })
-	    return result
-	  }
-
-	  // shortcut methods for `.bind(event, fn)` for each event type
-	  ;('focusin focusout focus blur load resize scroll unload click dblclick '+
-	  'mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave '+
-	  'change select keydown keypress keyup error').split(' ').forEach(function(event) {
-	    $.fn[event] = function(callback) {
-	      return (0 in arguments) ?
-	        this.bind(event, callback) :
-	        this.trigger(event)
-	    }
-	  })
-
-	  $.Event = function(type, props) {
-	    if (!isString(type)) props = type, type = props.type
-	    var event = document.createEvent(specialEvents[type] || 'Events'), bubbles = true
-	    if (props) for (var name in props) (name == 'bubbles') ? (bubbles = !!props[name]) : (event[name] = props[name])
-	    event.initEvent(type, bubbles, true)
-	    return compatible(event)
-	  }
-
-	})(Zepto)
-
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	//     Zepto.js
-	//     (c) 2010-2016 Thomas Fuchs
-	//     Zepto.js may be freely distributed under the MIT license.
-
-	var Zepto = __webpack_require__(3);
-
-	;(function($){
-	  $.fn.serializeArray = function() {
-	    var name, type, result = [],
-	      add = function(value) {
-	        if (value.forEach) return value.forEach(add)
-	        result.push({ name: name, value: value })
-	      }
-	    if (this[0]) $.each(this[0].elements, function(_, field){
-	      type = field.type, name = field.name
-	      if (name && field.nodeName.toLowerCase() != 'fieldset' &&
-	        !field.disabled && type != 'submit' && type != 'reset' && type != 'button' && type != 'file' &&
-	        ((type != 'radio' && type != 'checkbox') || field.checked))
-	          add($(field).val())
-	    })
-	    return result
-	  }
-
-	  $.fn.serialize = function(){
-	    var result = []
-	    this.serializeArray().forEach(function(elm){
-	      result.push(encodeURIComponent(elm.name) + '=' + encodeURIComponent(elm.value))
-	    })
-	    return result.join('&')
-	  }
-
-	  $.fn.submit = function(callback) {
-	    if (0 in arguments) this.bind('submit', callback)
-	    else if (this.length) {
-	      var event = $.Event('submit')
-	      this.eq(0).trigger(event)
-	      if (!event.isDefaultPrevented()) this.get(0).submit()
-	    }
-	    return this
-	  }
-
-	})(Zepto)
-
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	//     Zepto.js
-	//     (c) 2010-2016 Thomas Fuchs
-	//     Zepto.js may be freely distributed under the MIT license.
-
-	;(function(){
-	  // getComputedStyle shouldn't freak out when called
-	  // without a valid element as argument
-	  try {
-	    getComputedStyle(undefined)
-	  } catch(e) {
-	    var nativeGetComputedStyle = getComputedStyle
-	    window.getComputedStyle = function(element, pseudoElement){
-	      try {
-	        return nativeGetComputedStyle(element, pseudoElement)
-	      } catch(e) {
-	        return null
-	      }
-	    }
-	  }
-	})()
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	//     Zepto.js
-	//     (c) 2010-2016 Thomas Fuchs
-	//     Zepto.js may be freely distributed under the MIT license.
-
-	var Zepto = __webpack_require__(3);
-
-	;(function($){
-	  function detect(ua, platform){
-	    var os = this.os = {}, browser = this.browser = {},
-	      webkit = ua.match(/Web[kK]it[\/]{0,1}([\d.]+)/),
-	      android = ua.match(/(Android);?[\s\/]+([\d.]+)?/),
-	      osx = !!ua.match(/\(Macintosh\; Intel /),
-	      ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
-	      ipod = ua.match(/(iPod)(.*OS\s([\d_]+))?/),
-	      iphone = !ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
-	      webos = ua.match(/(webOS|hpwOS)[\s\/]([\d.]+)/),
-	      win = /Win\d{2}|Windows/.test(platform),
-	      wp = ua.match(/Windows Phone ([\d.]+)/),
-	      touchpad = webos && ua.match(/TouchPad/),
-	      kindle = ua.match(/Kindle\/([\d.]+)/),
-	      silk = ua.match(/Silk\/([\d._]+)/),
-	      blackberry = ua.match(/(BlackBerry).*Version\/([\d.]+)/),
-	      bb10 = ua.match(/(BB10).*Version\/([\d.]+)/),
-	      rimtabletos = ua.match(/(RIM\sTablet\sOS)\s([\d.]+)/),
-	      playbook = ua.match(/PlayBook/),
-	      chrome = ua.match(/Chrome\/([\d.]+)/) || ua.match(/CriOS\/([\d.]+)/),
-	      firefox = ua.match(/Firefox\/([\d.]+)/),
-	      firefoxos = ua.match(/\((?:Mobile|Tablet); rv:([\d.]+)\).*Firefox\/[\d.]+/),
-	      ie = ua.match(/MSIE\s([\d.]+)/) || ua.match(/Trident\/[\d](?=[^\?]+).*rv:([0-9.].)/),
-	      webview = !chrome && ua.match(/(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/),
-	      safari = webview || ua.match(/Version\/([\d.]+)([^S](Safari)|[^M]*(Mobile)[^S]*(Safari))/)
-
-	    // Todo: clean this up with a better OS/browser seperation:
-	    // - discern (more) between multiple browsers on android
-	    // - decide if kindle fire in silk mode is android or not
-	    // - Firefox on Android doesn't specify the Android version
-	    // - possibly devide in os, device and browser hashes
-
-	    if (browser.webkit = !!webkit) browser.version = webkit[1]
-
-	    if (android) os.android = true, os.version = android[2]
-	    if (iphone && !ipod) os.ios = os.iphone = true, os.version = iphone[2].replace(/_/g, '.')
-	    if (ipad) os.ios = os.ipad = true, os.version = ipad[2].replace(/_/g, '.')
-	    if (ipod) os.ios = os.ipod = true, os.version = ipod[3] ? ipod[3].replace(/_/g, '.') : null
-	    if (wp) os.wp = true, os.version = wp[1]
-	    if (webos) os.webos = true, os.version = webos[2]
-	    if (touchpad) os.touchpad = true
-	    if (blackberry) os.blackberry = true, os.version = blackberry[2]
-	    if (bb10) os.bb10 = true, os.version = bb10[2]
-	    if (rimtabletos) os.rimtabletos = true, os.version = rimtabletos[2]
-	    if (playbook) browser.playbook = true
-	    if (kindle) os.kindle = true, os.version = kindle[1]
-	    if (silk) browser.silk = true, browser.version = silk[1]
-	    if (!silk && os.android && ua.match(/Kindle Fire/)) browser.silk = true
-	    if (chrome) browser.chrome = true, browser.version = chrome[1]
-	    if (firefox) browser.firefox = true, browser.version = firefox[1]
-	    if (firefoxos) os.firefoxos = true, os.version = firefoxos[1]
-	    if (ie) browser.ie = true, browser.version = ie[1]
-	    if (safari && (osx || os.ios || win)) {
-	      browser.safari = true
-	      if (!os.ios) browser.version = safari[1]
-	    }
-	    if (webview) browser.webview = true
-
-	    os.tablet = !!(ipad || playbook || (android && !ua.match(/Mobile/)) ||
-	      (firefox && ua.match(/Tablet/)) || (ie && !ua.match(/Phone/) && ua.match(/Touch/)))
-	    os.phone  = !!(!os.tablet && !os.ipod && (android || iphone || webos || blackberry || bb10 ||
-	      (chrome && ua.match(/Android/)) || (chrome && ua.match(/CriOS\/([\d.]+)/)) ||
-	      (firefox && ua.match(/Mobile/)) || (ie && ua.match(/Touch/))))
-	  }
-
-	  detect.call($, navigator.userAgent, navigator.platform)
-	  // make available to unit tests
-	  $.__detect = detect
-
-	})(Zepto)
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	//     Zepto.js
-	//     (c) 2010-2016 Thomas Fuchs
-	//     Zepto.js may be freely distributed under the MIT license.
-
-	// The following code is heavily inspired by jQuery's $.fn.data()
-
-	var Zepto = __webpack_require__(3);
-
-	;(function($){
-	  var data = {}, dataAttr = $.fn.data, camelize = $.camelCase,
-	    exp = $.expando = 'Zepto' + (+new Date()), emptyArray = []
-
-	  // Get value from node:
-	  // 1. first try key as given,
-	  // 2. then try camelized key,
-	  // 3. fall back to reading "data-*" attribute.
-	  function getData(node, name) {
-	    var id = node[exp], store = id && data[id]
-	    if (name === undefined) return store || setData(node)
-	    else {
-	      if (store) {
-	        if (name in store) return store[name]
-	        var camelName = camelize(name)
-	        if (camelName in store) return store[camelName]
-	      }
-	      return dataAttr.call($(node), name)
-	    }
-	  }
-
-	  // Store value under camelized key on node
-	  function setData(node, name, value) {
-	    var id = node[exp] || (node[exp] = ++$.uuid),
-	      store = data[id] || (data[id] = attributeData(node))
-	    if (name !== undefined) store[camelize(name)] = value
-	    return store
-	  }
-
-	  // Read all "data-*" attributes from a node
-	  function attributeData(node) {
-	    var store = {}
-	    $.each(node.attributes || emptyArray, function(i, attr){
-	      if (attr.name.indexOf('data-') == 0)
-	        store[camelize(attr.name.replace('data-', ''))] =
-	          $.zepto.deserializeValue(attr.value)
-	    })
-	    return store
-	  }
-
-	  $.fn.data = function(name, value) {
-	    return value === undefined ?
-	      // set multiple values via object
-	      $.isPlainObject(name) ?
-	        this.each(function(i, node){
-	          $.each(name, function(key, value){ setData(node, key, value) })
-	        }) :
-	        // get value from first element
-	        (0 in this ? getData(this[0], name) : undefined) :
-	      // set value on all elements
-	      this.each(function(){ setData(this, name, value) })
-	  }
-
-	  $.data = function(elem, name, value) {
-	    return $(elem).data(name, value)
-	  }
-
-	  $.hasData = function(elem) {
-	    var id = elem[exp], store = id && data[id]
-	    return store ? !$.isEmptyObject(store) : false
-	  }
-
-	  $.fn.removeData = function(names) {
-	    if (typeof names == 'string') names = names.split(/\s+/)
-	    return this.each(function(){
-	      var id = this[exp], store = id && data[id]
-	      if (store) $.each(names || store, function(key){
-	        delete store[names ? camelize(this) : key]
-	      })
-	    })
-	  }
-
-	  // Generate extended `remove` and `empty` functions
-	  ;['remove', 'empty'].forEach(function(methodName){
-	    var origFn = $.fn[methodName]
-	    $.fn[methodName] = function() {
-	      var elements = this.find('*')
-	      if (methodName === 'remove') elements = elements.add(this)
-	      elements.removeData()
-	      return origFn.call(this)
-	    }
-	  })
-	})(Zepto)
-
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	//     Zepto.js
-	//     (c) 2010-2016 Thomas Fuchs
-	//     Zepto.js may be freely distributed under the MIT license.
-
-	var Zepto = __webpack_require__(3);
-
-	;(function($){
-	  var touch = {},
-	    touchTimeout, tapTimeout, swipeTimeout, longTapTimeout,
-	    longTapDelay = 750,
-	    gesture
-
-	  function swipeDirection(x1, x2, y1, y2) {
-	    return Math.abs(x1 - x2) >=
-	      Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
-	  }
-
-	  function longTap() {
-	    longTapTimeout = null
-	    if (touch.last) {
-	      touch.el.trigger('longTap')
-	      touch = {}
-	    }
-	  }
-
-	  function cancelLongTap() {
-	    if (longTapTimeout) clearTimeout(longTapTimeout)
-	    longTapTimeout = null
-	  }
-
-	  function cancelAll() {
-	    if (touchTimeout) clearTimeout(touchTimeout)
-	    if (tapTimeout) clearTimeout(tapTimeout)
-	    if (swipeTimeout) clearTimeout(swipeTimeout)
-	    if (longTapTimeout) clearTimeout(longTapTimeout)
-	    touchTimeout = tapTimeout = swipeTimeout = longTapTimeout = null
-	    touch = {}
-	  }
-
-	  function isPrimaryTouch(event){
-	    return (event.pointerType == 'touch' ||
-	      event.pointerType == event.MSPOINTER_TYPE_TOUCH)
-	      && event.isPrimary
-	  }
-
-	  function isPointerEventType(e, type){
-	    return (e.type == 'pointer'+type ||
-	      e.type.toLowerCase() == 'mspointer'+type)
-	  }
-
-	  $(document).ready(function(){
-	    var now, delta, deltaX = 0, deltaY = 0, firstTouch, _isPointerType
-
-	    if ('MSGesture' in window) {
-	      gesture = new MSGesture()
-	      gesture.target = document.body
-	    }
-
-	    $(document)
-	      .bind('MSGestureEnd', function(e){
-	        var swipeDirectionFromVelocity =
-	          e.velocityX > 1 ? 'Right' : e.velocityX < -1 ? 'Left' : e.velocityY > 1 ? 'Down' : e.velocityY < -1 ? 'Up' : null
-	        if (swipeDirectionFromVelocity) {
-	          touch.el.trigger('swipe')
-	          touch.el.trigger('swipe'+ swipeDirectionFromVelocity)
-	        }
-	      })
-	      .on('touchstart MSPointerDown pointerdown', function(e){
-	        if((_isPointerType = isPointerEventType(e, 'down')) &&
-	          !isPrimaryTouch(e)) return
-	        firstTouch = _isPointerType ? e : e.touches[0]
-	        if (e.touches && e.touches.length === 1 && touch.x2) {
-	          // Clear out touch movement data if we have it sticking around
-	          // This can occur if touchcancel doesn't fire due to preventDefault, etc.
-	          touch.x2 = undefined
-	          touch.y2 = undefined
-	        }
-	        now = Date.now()
-	        delta = now - (touch.last || now)
-	        touch.el = $('tagName' in firstTouch.target ?
-	          firstTouch.target : firstTouch.target.parentNode)
-	        touchTimeout && clearTimeout(touchTimeout)
-	        touch.x1 = firstTouch.pageX
-	        touch.y1 = firstTouch.pageY
-	        if (delta > 0 && delta <= 250) touch.isDoubleTap = true
-	        touch.last = now
-	        longTapTimeout = setTimeout(longTap, longTapDelay)
-	        // adds the current touch contact for IE gesture recognition
-	        if (gesture && _isPointerType) gesture.addPointer(e.pointerId)
-	      })
-	      .on('touchmove MSPointerMove pointermove', function(e){
-	        if((_isPointerType = isPointerEventType(e, 'move')) &&
-	          !isPrimaryTouch(e)) return
-	        firstTouch = _isPointerType ? e : e.touches[0]
-	        cancelLongTap()
-	        touch.x2 = firstTouch.pageX
-	        touch.y2 = firstTouch.pageY
-
-	        deltaX += Math.abs(touch.x1 - touch.x2)
-	        deltaY += Math.abs(touch.y1 - touch.y2)
-	      })
-	      .on('touchend MSPointerUp pointerup', function(e){
-	        if((_isPointerType = isPointerEventType(e, 'up')) &&
-	          !isPrimaryTouch(e)) return
-	        cancelLongTap()
-
-	        // swipe
-	        if ((touch.x2 && Math.abs(touch.x1 - touch.x2) > 30) ||
-	            (touch.y2 && Math.abs(touch.y1 - touch.y2) > 30))
-
-	          swipeTimeout = setTimeout(function() {
-	            if (touch.el){
-	              touch.el.trigger('swipe')
-	              touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)))
-	            }
-	            touch = {}
-	          }, 0)
-
-	        // normal tap
-	        else if ('last' in touch)
-	          // don't fire tap when delta position changed by more than 30 pixels,
-	          // for instance when moving to a point and back to origin
-	          if (deltaX < 30 && deltaY < 30) {
-	            // delay by one tick so we can cancel the 'tap' event if 'scroll' fires
-	            // ('tap' fires before 'scroll')
-	            tapTimeout = setTimeout(function() {
-
-	              // trigger universal 'tap' with the option to cancelTouch()
-	              // (cancelTouch cancels processing of single vs double taps for faster 'tap' response)
-	              var event = $.Event('tap')
-	              event.cancelTouch = cancelAll
-	              // [by paper] fix -> "TypeError: 'undefined' is not an object (evaluating 'touch.el.trigger'), when double tap
-	              if (touch.el) touch.el.trigger(event)
-
-	              // trigger double tap immediately
-	              if (touch.isDoubleTap) {
-	                if (touch.el) touch.el.trigger('doubleTap')
-	                touch = {}
-	              }
-
-	              // trigger single tap after 250ms of inactivity
-	              else {
-	                touchTimeout = setTimeout(function(){
-	                  touchTimeout = null
-	                  if (touch.el) touch.el.trigger('singleTap')
-	                  touch = {}
-	                }, 250)
-	              }
-	            }, 0)
-	          } else {
-	            touch = {}
-	          }
-	          deltaX = deltaY = 0
-
-	      })
-	      // when the browser window loses focus,
-	      // for example when a modal dialog is shown,
-	      // cancel all ongoing events
-	      .on('touchcancel MSPointerCancel pointercancel', cancelAll)
-
-	    // scrolling the window indicates intention of the user
-	    // to scroll, not tap or swipe, so cancel all ongoing events
-	    $(window).on('scroll', cancelAll)
-	  })
-
-	  ;['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown',
-	    'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function(eventName){
-	    $.fn[eventName] = function(callback){ return this.on(eventName, callback) }
-	  })
-	})(Zepto)
-
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	//     Zepto.js
-	//     (c) 2010-2016 Thomas Fuchs
-	//     Zepto.js may be freely distributed under the MIT license.
-
-	var Zepto = __webpack_require__(3);
-
-	;(function($){
-	  $.fn.end = function(){
-	    return this.prevObject || $()
-	  }
-
-	  $.fn.andSelf = function(){
-	    return this.add(this.prevObject || $())
-	  }
-
-	  'filter,add,not,eq,first,last,find,closest,parents,parent,children,siblings'.split(',').forEach(function(property){
-	    var fn = $.fn[property]
-	    $.fn[property] = function(){
-	      var ret = fn.apply(this, arguments)
-	      ret.prevObject = this
-	      return ret
-	    }
-	  })
-	})(Zepto)
-
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	//     Zepto.js
-	//     (c) 2010-2016 Thomas Fuchs
-	//     Zepto.js may be freely distributed under the MIT license.
-
-	var Zepto = __webpack_require__(3);
-
-	;(function($){
 	  var jsonpID = +new Date(),
 	      document = window.document,
 	      key,
@@ -2234,6 +1580,750 @@
 	    serialize(params, obj, traditional)
 	    return params.join('&').replace(/%20/g, '+')
 	  }
+	})(Zepto)
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//     Zepto.js
+	//     (c) 2010-2016 Thomas Fuchs
+	//     Zepto.js may be freely distributed under the MIT license.
+
+	var Zepto = __webpack_require__(3);
+
+	;(function($){
+	  var _zid = 1, undefined,
+	      slice = Array.prototype.slice,
+	      isFunction = $.isFunction,
+	      isString = function(obj){ return typeof obj == 'string' },
+	      handlers = {},
+	      specialEvents={},
+	      focusinSupported = 'onfocusin' in window,
+	      focus = { focus: 'focusin', blur: 'focusout' },
+	      hover = { mouseenter: 'mouseover', mouseleave: 'mouseout' }
+
+	  specialEvents.click = specialEvents.mousedown = specialEvents.mouseup = specialEvents.mousemove = 'MouseEvents'
+
+	  function zid(element) {
+	    return element._zid || (element._zid = _zid++)
+	  }
+	  function findHandlers(element, event, fn, selector) {
+	    event = parse(event)
+	    if (event.ns) var matcher = matcherFor(event.ns)
+	    return (handlers[zid(element)] || []).filter(function(handler) {
+	      return handler
+	        && (!event.e  || handler.e == event.e)
+	        && (!event.ns || matcher.test(handler.ns))
+	        && (!fn       || zid(handler.fn) === zid(fn))
+	        && (!selector || handler.sel == selector)
+	    })
+	  }
+	  function parse(event) {
+	    var parts = ('' + event).split('.')
+	    return {e: parts[0], ns: parts.slice(1).sort().join(' ')}
+	  }
+	  function matcherFor(ns) {
+	    return new RegExp('(?:^| )' + ns.replace(' ', ' .* ?') + '(?: |$)')
+	  }
+
+	  function eventCapture(handler, captureSetting) {
+	    return handler.del &&
+	      (!focusinSupported && (handler.e in focus)) ||
+	      !!captureSetting
+	  }
+
+	  function realEvent(type) {
+	    return hover[type] || (focusinSupported && focus[type]) || type
+	  }
+
+	  function add(element, events, fn, data, selector, delegator, capture){
+	    var id = zid(element), set = (handlers[id] || (handlers[id] = []))
+	    events.split(/\s/).forEach(function(event){
+	      if (event == 'ready') return $(document).ready(fn)
+	      var handler   = parse(event)
+	      handler.fn    = fn
+	      handler.sel   = selector
+	      // emulate mouseenter, mouseleave
+	      if (handler.e in hover) fn = function(e){
+	        var related = e.relatedTarget
+	        if (!related || (related !== this && !$.contains(this, related)))
+	          return handler.fn.apply(this, arguments)
+	      }
+	      handler.del   = delegator
+	      var callback  = delegator || fn
+	      handler.proxy = function(e){
+	        e = compatible(e)
+	        if (e.isImmediatePropagationStopped()) return
+	        e.data = data
+	        var result = callback.apply(element, e._args == undefined ? [e] : [e].concat(e._args))
+	        if (result === false) e.preventDefault(), e.stopPropagation()
+	        return result
+	      }
+	      handler.i = set.length
+	      set.push(handler)
+	      if ('addEventListener' in element)
+	        element.addEventListener(realEvent(handler.e), handler.proxy, eventCapture(handler, capture))
+	    })
+	  }
+	  function remove(element, events, fn, selector, capture){
+	    var id = zid(element)
+	    ;(events || '').split(/\s/).forEach(function(event){
+	      findHandlers(element, event, fn, selector).forEach(function(handler){
+	        delete handlers[id][handler.i]
+	      if ('removeEventListener' in element)
+	        element.removeEventListener(realEvent(handler.e), handler.proxy, eventCapture(handler, capture))
+	      })
+	    })
+	  }
+
+	  $.event = { add: add, remove: remove }
+
+	  $.proxy = function(fn, context) {
+	    var args = (2 in arguments) && slice.call(arguments, 2)
+	    if (isFunction(fn)) {
+	      var proxyFn = function(){ return fn.apply(context, args ? args.concat(slice.call(arguments)) : arguments) }
+	      proxyFn._zid = zid(fn)
+	      return proxyFn
+	    } else if (isString(context)) {
+	      if (args) {
+	        args.unshift(fn[context], fn)
+	        return $.proxy.apply(null, args)
+	      } else {
+	        return $.proxy(fn[context], fn)
+	      }
+	    } else {
+	      throw new TypeError("expected function")
+	    }
+	  }
+
+	  $.fn.bind = function(event, data, callback){
+	    return this.on(event, data, callback)
+	  }
+	  $.fn.unbind = function(event, callback){
+	    return this.off(event, callback)
+	  }
+	  $.fn.one = function(event, selector, data, callback){
+	    return this.on(event, selector, data, callback, 1)
+	  }
+
+	  var returnTrue = function(){return true},
+	      returnFalse = function(){return false},
+	      ignoreProperties = /^([A-Z]|returnValue$|layer[XY]$|webkitMovement[XY]$)/,
+	      eventMethods = {
+	        preventDefault: 'isDefaultPrevented',
+	        stopImmediatePropagation: 'isImmediatePropagationStopped',
+	        stopPropagation: 'isPropagationStopped'
+	      }
+
+	  function compatible(event, source) {
+	    if (source || !event.isDefaultPrevented) {
+	      source || (source = event)
+
+	      $.each(eventMethods, function(name, predicate) {
+	        var sourceMethod = source[name]
+	        event[name] = function(){
+	          this[predicate] = returnTrue
+	          return sourceMethod && sourceMethod.apply(source, arguments)
+	        }
+	        event[predicate] = returnFalse
+	      })
+
+	      try {
+	        event.timeStamp || (event.timeStamp = Date.now())
+	      } catch (ignored) { }
+
+	      if (source.defaultPrevented !== undefined ? source.defaultPrevented :
+	          'returnValue' in source ? source.returnValue === false :
+	          source.getPreventDefault && source.getPreventDefault())
+	        event.isDefaultPrevented = returnTrue
+	    }
+	    return event
+	  }
+
+	  function createProxy(event) {
+	    var key, proxy = { originalEvent: event }
+	    for (key in event)
+	      if (!ignoreProperties.test(key) && event[key] !== undefined) proxy[key] = event[key]
+
+	    return compatible(proxy, event)
+	  }
+
+	  $.fn.delegate = function(selector, event, callback){
+	    return this.on(event, selector, callback)
+	  }
+	  $.fn.undelegate = function(selector, event, callback){
+	    return this.off(event, selector, callback)
+	  }
+
+	  $.fn.live = function(event, callback){
+	    $(document.body).delegate(this.selector, event, callback)
+	    return this
+	  }
+	  $.fn.die = function(event, callback){
+	    $(document.body).undelegate(this.selector, event, callback)
+	    return this
+	  }
+
+	  $.fn.on = function(event, selector, data, callback, one){
+	    var autoRemove, delegator, $this = this
+	    if (event && !isString(event)) {
+	      $.each(event, function(type, fn){
+	        $this.on(type, selector, data, fn, one)
+	      })
+	      return $this
+	    }
+
+	    if (!isString(selector) && !isFunction(callback) && callback !== false)
+	      callback = data, data = selector, selector = undefined
+	    if (callback === undefined || data === false)
+	      callback = data, data = undefined
+
+	    if (callback === false) callback = returnFalse
+
+	    return $this.each(function(_, element){
+	      if (one) autoRemove = function(e){
+	        remove(element, e.type, callback)
+	        return callback.apply(this, arguments)
+	      }
+
+	      if (selector) delegator = function(e){
+	        var evt, match = $(e.target).closest(selector, element).get(0)
+	        if (match && match !== element) {
+	          evt = $.extend(createProxy(e), {currentTarget: match, liveFired: element})
+	          return (autoRemove || callback).apply(match, [evt].concat(slice.call(arguments, 1)))
+	        }
+	      }
+
+	      add(element, event, callback, data, selector, delegator || autoRemove)
+	    })
+	  }
+	  $.fn.off = function(event, selector, callback){
+	    var $this = this
+	    if (event && !isString(event)) {
+	      $.each(event, function(type, fn){
+	        $this.off(type, selector, fn)
+	      })
+	      return $this
+	    }
+
+	    if (!isString(selector) && !isFunction(callback) && callback !== false)
+	      callback = selector, selector = undefined
+
+	    if (callback === false) callback = returnFalse
+
+	    return $this.each(function(){
+	      remove(this, event, callback, selector)
+	    })
+	  }
+
+	  $.fn.trigger = function(event, args){
+	    event = (isString(event) || $.isPlainObject(event)) ? $.Event(event) : compatible(event)
+	    event._args = args
+	    return this.each(function(){
+	      // handle focus(), blur() by calling them directly
+	      if (event.type in focus && typeof this[event.type] == "function") this[event.type]()
+	      // items in the collection might not be DOM elements
+	      else if ('dispatchEvent' in this) this.dispatchEvent(event)
+	      else $(this).triggerHandler(event, args)
+	    })
+	  }
+
+	  // triggers event handlers on current element just as if an event occurred,
+	  // doesn't trigger an actual event, doesn't bubble
+	  $.fn.triggerHandler = function(event, args){
+	    var e, result
+	    this.each(function(i, element){
+	      e = createProxy(isString(event) ? $.Event(event) : event)
+	      e._args = args
+	      e.target = element
+	      $.each(findHandlers(element, event.type || event), function(i, handler){
+	        result = handler.proxy(e)
+	        if (e.isImmediatePropagationStopped()) return false
+	      })
+	    })
+	    return result
+	  }
+
+	  // shortcut methods for `.bind(event, fn)` for each event type
+	  ;('focusin focusout focus blur load resize scroll unload click dblclick '+
+	  'mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave '+
+	  'change select keydown keypress keyup error').split(' ').forEach(function(event) {
+	    $.fn[event] = function(callback) {
+	      return (0 in arguments) ?
+	        this.bind(event, callback) :
+	        this.trigger(event)
+	    }
+	  })
+
+	  $.Event = function(type, props) {
+	    if (!isString(type)) props = type, type = props.type
+	    var event = document.createEvent(specialEvents[type] || 'Events'), bubbles = true
+	    if (props) for (var name in props) (name == 'bubbles') ? (bubbles = !!props[name]) : (event[name] = props[name])
+	    event.initEvent(type, bubbles, true)
+	    return compatible(event)
+	  }
+
+	})(Zepto)
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//     Zepto.js
+	//     (c) 2010-2016 Thomas Fuchs
+	//     Zepto.js may be freely distributed under the MIT license.
+
+	var Zepto = __webpack_require__(3);
+
+	;(function($){
+	  $.fn.serializeArray = function() {
+	    var name, type, result = [],
+	      add = function(value) {
+	        if (value.forEach) return value.forEach(add)
+	        result.push({ name: name, value: value })
+	      }
+	    if (this[0]) $.each(this[0].elements, function(_, field){
+	      type = field.type, name = field.name
+	      if (name && field.nodeName.toLowerCase() != 'fieldset' &&
+	        !field.disabled && type != 'submit' && type != 'reset' && type != 'button' && type != 'file' &&
+	        ((type != 'radio' && type != 'checkbox') || field.checked))
+	          add($(field).val())
+	    })
+	    return result
+	  }
+
+	  $.fn.serialize = function(){
+	    var result = []
+	    this.serializeArray().forEach(function(elm){
+	      result.push(encodeURIComponent(elm.name) + '=' + encodeURIComponent(elm.value))
+	    })
+	    return result.join('&')
+	  }
+
+	  $.fn.submit = function(callback) {
+	    if (0 in arguments) this.bind('submit', callback)
+	    else if (this.length) {
+	      var event = $.Event('submit')
+	      this.eq(0).trigger(event)
+	      if (!event.isDefaultPrevented()) this.get(0).submit()
+	    }
+	    return this
+	  }
+
+	})(Zepto)
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	//     Zepto.js
+	//     (c) 2010-2016 Thomas Fuchs
+	//     Zepto.js may be freely distributed under the MIT license.
+
+	;(function(){
+	  // getComputedStyle shouldn't freak out when called
+	  // without a valid element as argument
+	  try {
+	    getComputedStyle(undefined)
+	  } catch(e) {
+	    var nativeGetComputedStyle = getComputedStyle
+	    window.getComputedStyle = function(element, pseudoElement){
+	      try {
+	        return nativeGetComputedStyle(element, pseudoElement)
+	      } catch(e) {
+	        return null
+	      }
+	    }
+	  }
+	})()
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//     Zepto.js
+	//     (c) 2010-2016 Thomas Fuchs
+	//     Zepto.js may be freely distributed under the MIT license.
+
+	var Zepto = __webpack_require__(3);
+
+	;(function($){
+	  function detect(ua, platform){
+	    var os = this.os = {}, browser = this.browser = {},
+	      webkit = ua.match(/Web[kK]it[\/]{0,1}([\d.]+)/),
+	      android = ua.match(/(Android);?[\s\/]+([\d.]+)?/),
+	      osx = !!ua.match(/\(Macintosh\; Intel /),
+	      ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
+	      ipod = ua.match(/(iPod)(.*OS\s([\d_]+))?/),
+	      iphone = !ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
+	      webos = ua.match(/(webOS|hpwOS)[\s\/]([\d.]+)/),
+	      win = /Win\d{2}|Windows/.test(platform),
+	      wp = ua.match(/Windows Phone ([\d.]+)/),
+	      touchpad = webos && ua.match(/TouchPad/),
+	      kindle = ua.match(/Kindle\/([\d.]+)/),
+	      silk = ua.match(/Silk\/([\d._]+)/),
+	      blackberry = ua.match(/(BlackBerry).*Version\/([\d.]+)/),
+	      bb10 = ua.match(/(BB10).*Version\/([\d.]+)/),
+	      rimtabletos = ua.match(/(RIM\sTablet\sOS)\s([\d.]+)/),
+	      playbook = ua.match(/PlayBook/),
+	      chrome = ua.match(/Chrome\/([\d.]+)/) || ua.match(/CriOS\/([\d.]+)/),
+	      firefox = ua.match(/Firefox\/([\d.]+)/),
+	      firefoxos = ua.match(/\((?:Mobile|Tablet); rv:([\d.]+)\).*Firefox\/[\d.]+/),
+	      ie = ua.match(/MSIE\s([\d.]+)/) || ua.match(/Trident\/[\d](?=[^\?]+).*rv:([0-9.].)/),
+	      webview = !chrome && ua.match(/(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/),
+	      safari = webview || ua.match(/Version\/([\d.]+)([^S](Safari)|[^M]*(Mobile)[^S]*(Safari))/)
+
+	    // Todo: clean this up with a better OS/browser seperation:
+	    // - discern (more) between multiple browsers on android
+	    // - decide if kindle fire in silk mode is android or not
+	    // - Firefox on Android doesn't specify the Android version
+	    // - possibly devide in os, device and browser hashes
+
+	    if (browser.webkit = !!webkit) browser.version = webkit[1]
+
+	    if (android) os.android = true, os.version = android[2]
+	    if (iphone && !ipod) os.ios = os.iphone = true, os.version = iphone[2].replace(/_/g, '.')
+	    if (ipad) os.ios = os.ipad = true, os.version = ipad[2].replace(/_/g, '.')
+	    if (ipod) os.ios = os.ipod = true, os.version = ipod[3] ? ipod[3].replace(/_/g, '.') : null
+	    if (wp) os.wp = true, os.version = wp[1]
+	    if (webos) os.webos = true, os.version = webos[2]
+	    if (touchpad) os.touchpad = true
+	    if (blackberry) os.blackberry = true, os.version = blackberry[2]
+	    if (bb10) os.bb10 = true, os.version = bb10[2]
+	    if (rimtabletos) os.rimtabletos = true, os.version = rimtabletos[2]
+	    if (playbook) browser.playbook = true
+	    if (kindle) os.kindle = true, os.version = kindle[1]
+	    if (silk) browser.silk = true, browser.version = silk[1]
+	    if (!silk && os.android && ua.match(/Kindle Fire/)) browser.silk = true
+	    if (chrome) browser.chrome = true, browser.version = chrome[1]
+	    if (firefox) browser.firefox = true, browser.version = firefox[1]
+	    if (firefoxos) os.firefoxos = true, os.version = firefoxos[1]
+	    if (ie) browser.ie = true, browser.version = ie[1]
+	    if (safari && (osx || os.ios || win)) {
+	      browser.safari = true
+	      if (!os.ios) browser.version = safari[1]
+	    }
+	    if (webview) browser.webview = true
+
+	    os.tablet = !!(ipad || playbook || (android && !ua.match(/Mobile/)) ||
+	      (firefox && ua.match(/Tablet/)) || (ie && !ua.match(/Phone/) && ua.match(/Touch/)))
+	    os.phone  = !!(!os.tablet && !os.ipod && (android || iphone || webos || blackberry || bb10 ||
+	      (chrome && ua.match(/Android/)) || (chrome && ua.match(/CriOS\/([\d.]+)/)) ||
+	      (firefox && ua.match(/Mobile/)) || (ie && ua.match(/Touch/))))
+	  }
+
+	  detect.call($, navigator.userAgent, navigator.platform)
+	  // make available to unit tests
+	  $.__detect = detect
+
+	})(Zepto)
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//     Zepto.js
+	//     (c) 2010-2016 Thomas Fuchs
+	//     Zepto.js may be freely distributed under the MIT license.
+
+	// The following code is heavily inspired by jQuery's $.fn.data()
+
+	var Zepto = __webpack_require__(3);
+
+	;(function($){
+	  var data = {}, dataAttr = $.fn.data, camelize = $.camelCase,
+	    exp = $.expando = 'Zepto' + (+new Date()), emptyArray = []
+
+	  // Get value from node:
+	  // 1. first try key as given,
+	  // 2. then try camelized key,
+	  // 3. fall back to reading "data-*" attribute.
+	  function getData(node, name) {
+	    var id = node[exp], store = id && data[id]
+	    if (name === undefined) return store || setData(node)
+	    else {
+	      if (store) {
+	        if (name in store) return store[name]
+	        var camelName = camelize(name)
+	        if (camelName in store) return store[camelName]
+	      }
+	      return dataAttr.call($(node), name)
+	    }
+	  }
+
+	  // Store value under camelized key on node
+	  function setData(node, name, value) {
+	    var id = node[exp] || (node[exp] = ++$.uuid),
+	      store = data[id] || (data[id] = attributeData(node))
+	    if (name !== undefined) store[camelize(name)] = value
+	    return store
+	  }
+
+	  // Read all "data-*" attributes from a node
+	  function attributeData(node) {
+	    var store = {}
+	    $.each(node.attributes || emptyArray, function(i, attr){
+	      if (attr.name.indexOf('data-') == 0)
+	        store[camelize(attr.name.replace('data-', ''))] =
+	          $.zepto.deserializeValue(attr.value)
+	    })
+	    return store
+	  }
+
+	  $.fn.data = function(name, value) {
+	    return value === undefined ?
+	      // set multiple values via object
+	      $.isPlainObject(name) ?
+	        this.each(function(i, node){
+	          $.each(name, function(key, value){ setData(node, key, value) })
+	        }) :
+	        // get value from first element
+	        (0 in this ? getData(this[0], name) : undefined) :
+	      // set value on all elements
+	      this.each(function(){ setData(this, name, value) })
+	  }
+
+	  $.data = function(elem, name, value) {
+	    return $(elem).data(name, value)
+	  }
+
+	  $.hasData = function(elem) {
+	    var id = elem[exp], store = id && data[id]
+	    return store ? !$.isEmptyObject(store) : false
+	  }
+
+	  $.fn.removeData = function(names) {
+	    if (typeof names == 'string') names = names.split(/\s+/)
+	    return this.each(function(){
+	      var id = this[exp], store = id && data[id]
+	      if (store) $.each(names || store, function(key){
+	        delete store[names ? camelize(this) : key]
+	      })
+	    })
+	  }
+
+	  // Generate extended `remove` and `empty` functions
+	  ;['remove', 'empty'].forEach(function(methodName){
+	    var origFn = $.fn[methodName]
+	    $.fn[methodName] = function() {
+	      var elements = this.find('*')
+	      if (methodName === 'remove') elements = elements.add(this)
+	      elements.removeData()
+	      return origFn.call(this)
+	    }
+	  })
+	})(Zepto)
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//     Zepto.js
+	//     (c) 2010-2016 Thomas Fuchs
+	//     Zepto.js may be freely distributed under the MIT license.
+
+	var Zepto = __webpack_require__(3);
+
+	;(function($){
+	  var touch = {},
+	    touchTimeout, tapTimeout, swipeTimeout, longTapTimeout,
+	    longTapDelay = 750,
+	    gesture
+
+	  function swipeDirection(x1, x2, y1, y2) {
+	    return Math.abs(x1 - x2) >=
+	      Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
+	  }
+
+	  function longTap() {
+	    longTapTimeout = null
+	    if (touch.last) {
+	      touch.el.trigger('longTap')
+	      touch = {}
+	    }
+	  }
+
+	  function cancelLongTap() {
+	    if (longTapTimeout) clearTimeout(longTapTimeout)
+	    longTapTimeout = null
+	  }
+
+	  function cancelAll() {
+	    if (touchTimeout) clearTimeout(touchTimeout)
+	    if (tapTimeout) clearTimeout(tapTimeout)
+	    if (swipeTimeout) clearTimeout(swipeTimeout)
+	    if (longTapTimeout) clearTimeout(longTapTimeout)
+	    touchTimeout = tapTimeout = swipeTimeout = longTapTimeout = null
+	    touch = {}
+	  }
+
+	  function isPrimaryTouch(event){
+	    return (event.pointerType == 'touch' ||
+	      event.pointerType == event.MSPOINTER_TYPE_TOUCH)
+	      && event.isPrimary
+	  }
+
+	  function isPointerEventType(e, type){
+	    return (e.type == 'pointer'+type ||
+	      e.type.toLowerCase() == 'mspointer'+type)
+	  }
+
+	  $(document).ready(function(){
+	    var now, delta, deltaX = 0, deltaY = 0, firstTouch, _isPointerType
+
+	    if ('MSGesture' in window) {
+	      gesture = new MSGesture()
+	      gesture.target = document.body
+	    }
+
+	    $(document)
+	      .bind('MSGestureEnd', function(e){
+	        var swipeDirectionFromVelocity =
+	          e.velocityX > 1 ? 'Right' : e.velocityX < -1 ? 'Left' : e.velocityY > 1 ? 'Down' : e.velocityY < -1 ? 'Up' : null
+	        if (swipeDirectionFromVelocity) {
+	          touch.el.trigger('swipe')
+	          touch.el.trigger('swipe'+ swipeDirectionFromVelocity)
+	        }
+	      })
+	      .on('touchstart MSPointerDown pointerdown', function(e){
+	        if((_isPointerType = isPointerEventType(e, 'down')) &&
+	          !isPrimaryTouch(e)) return
+	        firstTouch = _isPointerType ? e : e.touches[0]
+	        if (e.touches && e.touches.length === 1 && touch.x2) {
+	          // Clear out touch movement data if we have it sticking around
+	          // This can occur if touchcancel doesn't fire due to preventDefault, etc.
+	          touch.x2 = undefined
+	          touch.y2 = undefined
+	        }
+	        now = Date.now()
+	        delta = now - (touch.last || now)
+	        touch.el = $('tagName' in firstTouch.target ?
+	          firstTouch.target : firstTouch.target.parentNode)
+	        touchTimeout && clearTimeout(touchTimeout)
+	        touch.x1 = firstTouch.pageX
+	        touch.y1 = firstTouch.pageY
+	        if (delta > 0 && delta <= 250) touch.isDoubleTap = true
+	        touch.last = now
+	        longTapTimeout = setTimeout(longTap, longTapDelay)
+	        // adds the current touch contact for IE gesture recognition
+	        if (gesture && _isPointerType) gesture.addPointer(e.pointerId)
+	      })
+	      .on('touchmove MSPointerMove pointermove', function(e){
+	        if((_isPointerType = isPointerEventType(e, 'move')) &&
+	          !isPrimaryTouch(e)) return
+	        firstTouch = _isPointerType ? e : e.touches[0]
+	        cancelLongTap()
+	        touch.x2 = firstTouch.pageX
+	        touch.y2 = firstTouch.pageY
+
+	        deltaX += Math.abs(touch.x1 - touch.x2)
+	        deltaY += Math.abs(touch.y1 - touch.y2)
+	      })
+	      .on('touchend MSPointerUp pointerup', function(e){
+	        if((_isPointerType = isPointerEventType(e, 'up')) &&
+	          !isPrimaryTouch(e)) return
+	        cancelLongTap()
+
+	        // swipe
+	        if ((touch.x2 && Math.abs(touch.x1 - touch.x2) > 30) ||
+	            (touch.y2 && Math.abs(touch.y1 - touch.y2) > 30))
+
+	          swipeTimeout = setTimeout(function() {
+	            if (touch.el){
+	              touch.el.trigger('swipe')
+	              touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)))
+	            }
+	            touch = {}
+	          }, 0)
+
+	        // normal tap
+	        else if ('last' in touch)
+	          // don't fire tap when delta position changed by more than 30 pixels,
+	          // for instance when moving to a point and back to origin
+	          if (deltaX < 30 && deltaY < 30) {
+	            // delay by one tick so we can cancel the 'tap' event if 'scroll' fires
+	            // ('tap' fires before 'scroll')
+	            tapTimeout = setTimeout(function() {
+
+	              // trigger universal 'tap' with the option to cancelTouch()
+	              // (cancelTouch cancels processing of single vs double taps for faster 'tap' response)
+	              var event = $.Event('tap')
+	              event.cancelTouch = cancelAll
+	              // [by paper] fix -> "TypeError: 'undefined' is not an object (evaluating 'touch.el.trigger'), when double tap
+	              if (touch.el) touch.el.trigger(event)
+
+	              // trigger double tap immediately
+	              if (touch.isDoubleTap) {
+	                if (touch.el) touch.el.trigger('doubleTap')
+	                touch = {}
+	              }
+
+	              // trigger single tap after 250ms of inactivity
+	              else {
+	                touchTimeout = setTimeout(function(){
+	                  touchTimeout = null
+	                  if (touch.el) touch.el.trigger('singleTap')
+	                  touch = {}
+	                }, 250)
+	              }
+	            }, 0)
+	          } else {
+	            touch = {}
+	          }
+	          deltaX = deltaY = 0
+
+	      })
+	      // when the browser window loses focus,
+	      // for example when a modal dialog is shown,
+	      // cancel all ongoing events
+	      .on('touchcancel MSPointerCancel pointercancel', cancelAll)
+
+	    // scrolling the window indicates intention of the user
+	    // to scroll, not tap or swipe, so cancel all ongoing events
+	    $(window).on('scroll', cancelAll)
+	  })
+
+	  ;['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown',
+	    'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function(eventName){
+	    $.fn[eventName] = function(callback){ return this.on(eventName, callback) }
+	  })
+	})(Zepto)
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//     Zepto.js
+	//     (c) 2010-2016 Thomas Fuchs
+	//     Zepto.js may be freely distributed under the MIT license.
+
+	var Zepto = __webpack_require__(3);
+
+	;(function($){
+	  $.fn.end = function(){
+	    return this.prevObject || $()
+	  }
+
+	  $.fn.andSelf = function(){
+	    return this.add(this.prevObject || $())
+	  }
+
+	  'filter,add,not,eq,first,last,find,closest,parents,parent,children,siblings'.split(',').forEach(function(property){
+	    var fn = $.fn[property]
+	    $.fn[property] = function(){
+	      var ret = fn.apply(this, arguments)
+	      ret.prevObject = this
+	      return ret
+	    }
+	  })
 	})(Zepto)
 
 
@@ -4392,34 +4482,12 @@
 /* 14 */
 /***/ function(module, exports) {
 
-	//本插件由www.swiper.com.cn提供
-	function swiperAnimateCache() {
-	    for (allBoxes = window.document.documentElement.querySelectorAll(".ani"), i = 0; i < allBoxes.length; i++) allBoxes[i].attributes["style"] ? allBoxes[i].setAttribute("swiper-animate-style-cache", allBoxes[i].attributes["style"].value) : allBoxes[i].setAttribute("swiper-animate-style-cache", " "),
-	    allBoxes[i].style.visibility = "hidden"
-	}
-	function swiperAnimate(a) {
-	    clearSwiperAnimate();
-	    var b = a.slides[a.activeIndex].querySelectorAll(".ani");
-	    for (i = 0; i < b.length; i++) b[i].style.visibility = "visible",
-	    effect = b[i].attributes["swiper-animate-effect"] ? b[i].attributes["swiper-animate-effect"].value: "",
-	    b[i].className = b[i].className + "  " + effect + " " + "animated",
-	    style = b[i].attributes["style"].value,
-	    duration = b[i].attributes["swiper-animate-duration"] ? b[i].attributes["swiper-animate-duration"].value: "",
-	    duration && (style = style + "animation-duration:" + duration + ";-webkit-animation-duration:" + duration + ";"),
-	    delay = b[i].attributes["swiper-animate-delay"] ? b[i].attributes["swiper-animate-delay"].value: "",
-	    delay && (style = style + "animation-delay:" + delay + ";-webkit-animation-delay:" + delay + ";"),
-	    b[i].setAttribute("style", style)
-	}
-	function clearSwiperAnimate() {
-	    for (allBoxes = window.document.documentElement.querySelectorAll(".ani"), i = 0; i < allBoxes.length; i++) allBoxes[i].attributes["swiper-animate-style-cache"] && allBoxes[i].setAttribute("style", allBoxes[i].attributes["swiper-animate-style-cache"].value),
-	    allBoxes[i].style.visibility = "hidden",
-	    allBoxes[i].className = allBoxes[i].className.replace("animated", " "),
-	    allBoxes[i].attributes["swiper-animate-effect"] && (effect = allBoxes[i].attributes["swiper-animate-effect"].value, allBoxes[i].className = allBoxes[i].className.replace(effect, " "))
-	}
+	function swiperAnimateCache(){for(allBoxes=window.document.documentElement.querySelectorAll(".ani"),i=0;i<allBoxes.length;i++)allBoxes[i].attributes["style"]?allBoxes[i].setAttribute("swiper-animate-style-cache",allBoxes[i].attributes["style"].value):allBoxes[i].setAttribute("swiper-animate-style-cache"," "),allBoxes[i].style.visibility="hidden"}function swiperAnimate(a){clearSwiperAnimate();var b=a.slides[a.activeIndex].querySelectorAll(".ani");for(i=0;i<b.length;i++)b[i].style.visibility="visible",effect=b[i].attributes["swiper-animate-effect"]?b[i].attributes["swiper-animate-effect"].value:"",b[i].className=b[i].className+"  "+effect+" "+"animated",style=b[i].attributes["style"].value,duration=b[i].attributes["swiper-animate-duration"]?b[i].attributes["swiper-animate-duration"].value:"",duration&&(style=style+"animation-duration:"+duration+";-webkit-animation-duration:"+duration+";"),delay=b[i].attributes["swiper-animate-delay"]?b[i].attributes["swiper-animate-delay"].value:"",delay&&(style=style+"animation-delay:"+delay+";-webkit-animation-delay:"+delay+";"),b[i].setAttribute("style",style)}function clearSwiperAnimate(){for(allBoxes=window.document.documentElement.querySelectorAll(".ani"),i=0;i<allBoxes.length;i++)allBoxes[i].attributes["swiper-animate-style-cache"]&&allBoxes[i].setAttribute("style",allBoxes[i].attributes["swiper-animate-style-cache"].value),allBoxes[i].style.visibility="hidden",allBoxes[i].className=allBoxes[i].className.replace("animated"," "),allBoxes[i].attributes["swiper-animate-effect"]&&(effect=allBoxes[i].attributes["swiper-animate-effect"].value,allBoxes[i].className=allBoxes[i].className.replace(effect," "))}
+
 	module.exports = {
-		swiperAnimateCache:swiperAnimateCache,
-		swiperAnimate:swiperAnimate,
-		clearSwiperAnimate:clearSwiperAnimate
+		swiperAnimateCache: swiperAnimateCache,
+		swiperAnimate: swiperAnimate,
+		clearSwiperAnimate: clearSwiperAnimate
 	}
 
 

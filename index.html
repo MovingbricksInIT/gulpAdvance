@@ -2,93 +2,142 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>个人简历</title>
-	<link rel="stylesheet" href="css/index.css">
-	
-
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+    <link href="images/resume_favicon.ico" rel="shortcut icon" type="image/x-icon">
 </head>
 <body>
-	 <!-- Swiper -->
+    <div id="preload">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+        <p class="preload-txt">loading</p>
+    </div>
+	<!-- Swiper -->
     <div class="swiper-container">
         <div class="swiper-wrapper">
-        	<div style="background:#3c394a" class="swiper-slide">
-				<p class="ani" style="font-size:26px;font-weight: bold; color:rgb(196, 67, 60);" swiper-animate-effect="rotateIn" swiper-animate-duration="1s" swiper-animate-delay="0.5s">奋力向前</p>
-				<p class="ani" style="font-size:26px;font-weight: bold; color:rgb(196, 67, 60);" swiper-animate-effect="rotateIn" swiper-animate-duration="1s" swiper-animate-delay="0.5s">勿忘初心</p>
-        	</div>
-            <div style="background:#3c394a" class="swiper-slide">
-            	<div class="first">
-            		<div class="firsttop" >
-            			<p class="ani" style="font-size:26px;font-weight: bold; color:rgb(196, 67, 60);" swiper-animate-effect="rotateIn" swiper-animate-duration="1s" swiper-animate-delay="0.5s">前端求职</p>
-	            	</div>
-	            	<div class="firstcontent">
-	            		<img  class="ani" swiper-animate-effect="zoomIn" swiper-animate-duration="3s" swiper-animate-delay="2s" src="img/zkx.jpg">
-	            	</div>
-	            	<div class="firstbottom" >
-		            	<p class="ani" style="color:red; font-size:22px" swiper-animate-effect="bounceInDown" swiper-animate-duration="3s" swiper-animate-delay="2s"> 张凯旋</p>
-		            	<p class="ani" swiper-animate-effect="bounceInLeft" swiper-animate-duration="3s" swiper-animate-delay="2s">学历：专科
-		            	     在校专业：软件技术</p>
-						<p class="ani" swiper-animate-effect="bounceInLeft" swiper-animate-duration="3s" swiper-animate-delay="2s">毕业院校：河南建筑职业技术学院</p>
-						
-						<p class="ani" swiper-animate-effect="bounceInLeft" swiper-animate-duration="3s" swiper-animate-delay="2s">电话：15038983976</p>
-						<p class="ani" swiper-animate-effect="bounceInLeft" swiper-animate-duration="3s" swiper-animate-delay="2s">
-						QQ：1540054917</p>
-						<p class="ani" swiper-animate-effect="bounceInLeft" swiper-animate-duration="3s" swiper-animate-delay="2s">
-						微信号：zkx821</p>	
-	            	</div>	
-            	</div>
+            <div class="swiper-slide">
+				<div id="swiper-one">
+                    <h2 class="ani" swiper-animate-effect="turnInDown" swiper-animate-duration="1s">个人简历</h2>
+                    <div class="xuanzhuan"></div>
+                    <div class="swiper-one-pic ani" swiper-animate-effect="rotateself" swiper-animate-duration="2s">
+                        <em class="iconfont ani" swiper-animate-effect="fadeOut" swiper-animate-duration="1s" swiper-animate-delay="2s">Web</em>
+                        <em class="iconfont ani" swiper-animate-effect="fadeIn" swiper-animate-duration="1s" swiper-animate-delay="2.2s">Web</em>
+                    </div>
+                    <p class="ani" swiper-animate-effect="fadeIn" swiper-animate-duration="1s"  swiper-animate-delay="3s">
+                        <span class="ani" swiper-animate-effect="fadeIn" swiper-animate-duration="1s" swiper-animate-delay="3.5s"></span>
+                        <b class="ani" swiper-animate-effect="fadeIn" swiper-animate-duration="1s" swiper-animate-delay="3.5s"></b>
+                    </p>
+                    <div class="swiper-one-txt ani" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.5s" swiper-animate-delay="2s">寻求一份前端工程师的工作</div>
+                    <p class="ani" swiper-animate-effect="fadeInRight" swiper-animate-duration="1s" swiper-animate-delay="2.5s">
+                        <span class="ani" swiper-animate-effect="fadeIn" swiper-animate-duration="1s" swiper-animate-delay="3.5s"></span>
+                        <b class="ani" swiper-animate-effect="fadeIn" swiper-animate-duration="1s" swiper-animate-delay="3.5s"></b>
+                    </p>
+                </div>
             </div>
-            <div style="background:#3c394a" class="swiper-slide">
-				<button style="color: #ffffff;
-        border: 2px solid red" id="enter"> 点击观看技能与作品 </button>
-
+            <div class="swiper-slide">
+                <div class="swiper-two-bg"><div class="swiper-two-opacity"></div></div>
+                <div id="swiper-two">
+                    <h2 class="ani" swiper-animate-effect="swing" swiper-animate-duration="2s">基本资料</h2>
+                    <div class="swiper-two-list">
+                        <div class="swiper-two-lists">
+                            <img src="images/glass.png" width="100" class="ani" swiper-animate-effect="rotateIn-1" swiper-animate-duration="1s">
+                            <p class="ani" swiper-animate-effect="fadeInDown" swiper-animate-duration="1s">基本信息</p>
+                            <span class="ani" swiper-animate-effect="fadeInUp" swiper-animate-duration="1s">姓名:张凯旋 男</span>
+                            <span class="ani" swiper-animate-effect="fadeInUp" swiper-animate-duration="1s">年龄:23岁 家乡:河南 许昌</span>
+                        </div>
+                        <div class="swiper-two-lists">
+                            <img src="images/hat.png" width="100" class="ani" swiper-animate-effect="rotateIn-1" swiper-animate-duration="1s" swiper-animate-delay="1s">
+                            <p class="ani" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="1s">毕业院校</p>
+                            <span class="ani" swiper-animate-effect="zoomInRight" swiper-animate-duration="1s" swiper-animate-delay="1s">河南建筑职业技术学院</span>
+                            <span>&nbsp;</span>
+                        </div>
+                        <div class="swiper-two-lists">
+                            <img src="images/book.png" width="100" class="ani" swiper-animate-effect="rotateIn-1" swiper-animate-duration="1s" swiper-animate-delay="2s">
+                            <p class="ani" swiper-animate-effect="zoomInDown" swiper-animate-duration="1s" swiper-animate-delay="2s">学历和技能</p>
+                            <span class="ani" swiper-animate-effect="zoomInLeft" swiper-animate-duration="1s" swiper-animate-delay="2s">学历:大专</span>
+                            <span class="ani" swiper-animate-effect="zoomInLeft" swiper-animate-duration="1s" swiper-animate-delay="2s">技能:编程</span>
+                            <span>&nbsp;</span>
+                        </div>
+                        <div class="swiper-two-lists">
+                            <img src="images/tel.png" width="100" class="ani" swiper-animate-effect="rotateIn-1" swiper-animate-duration="1s" swiper-animate-delay="3s">
+                            <p class="ani" swiper-animate-effect="slideInRight" swiper-animate-duration="1s" swiper-animate-delay="3s">联系方式</p>
+                            <span class="ani" swiper-animate-effect="slideInLeft" swiper-animate-duration="1s" swiper-animate-delay="3s">电话:15038983976</span>
+                            <span class="ani" swiper-animate-effect="slideInRight" swiper-animate-duration="1s" swiper-animate-delay="3s">Email:150389839<br>76@qq.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="swiper-three-bg"><div class="swiper-three-opacity"></div></div>
+                <div id="swiper-three">
+                    <h2 class="ani" swiper-animate-effect="rollIn" swiper-animate-duration="1s">技能简述</h2>
+                    <div class="swiper-three ani" swiper-animate-effect="bounce1" swiper-animate-duration="10s">
+                        <p><em class="iconfont">&#xe609;</em><span>HTML</span></p>
+                        <p><em class="iconfont">&#xe608;</em><span>CSS</span></p>
+                        <p><em class="iconfont">&#xe60b;</em><span>HTML5</span></p>
+                        <p><em class="iconfont">&#xe602;</em><span>CSS3</span></p>
+                        <p><em class="iconfont">&#xe603;</em><span>Javascript</span></p>
+                        <p><em class="iconfont">&#xe634;</em><span>JQuery</span></p>
+                        <p><em class="iconfont">&#xe600;</em><span>Gulp</span></p>
+                        <p><em class="iconfont">&#xe624;</em><span>Angular JS</span></p>
+                        <p><em class="iconfont">&#xe625;</em><span>SASS</span></p>
+                        <p><em class="iconfont">&#xe62a;</em><span>React</span></p>
+                        <p><em class="iconfont">&#xe642;</em><span>Bootstrap</span></p>
+                        <p><em class="iconfont">&#xe641;</em><span>Swiper</span></p>
+                        <p><em class="iconfont">&#xe61a;</em><span>LESS</span></p>
+                        <p><em class="iconfont">&#xe626;</em><span>ionic</span></p>
+                        <p><em class="iconfont">&#xe629;</em><span>git</span></p>
+                    </div>
+                    <b class="swiper-three-detail ani" swiper-animate-effect="hinge" swiper-animate-duration="1s" swiper-animate-delay="3s">详情请参考主要技能页面</b>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="swiper-four-bg"><div class="swiper-four-opacity"></div></div>
+                <div id="swiper-four">
+                    <h2 class="ani" swiper-animate-effect="rollIn" swiper-animate-duration="1s">人生经历</h2>
+                    <div class="swiper-four">
+                        <div class="timeline-item">
+                            <div class="timeline-icon ani" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="1s">1<p class="ani" swiper-animate-effect="slideHeight" swiper-animate-duration="0.5s" swiper-animate-delay="1.5s"></p></div>
+                            <div class="timeline-content ani" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="1s">
+                                <h4>2011.09 to 2015.06</h4>
+                                <p>河南建筑职业技术学院</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon ani" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="2s">2</div>
+                            <div class="timeline-content ani" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="2s">
+                                <h4>2015.06 to 2016.10</h4>
+                                <p>许昌金蚂蚁网络科技有限公司</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="enter" class="ani" swiper-animate-effect="rotateIn-2" swiper-animate-duration="1s"  swiper-animate-delay="2s">进入主页</button>
+                </div>
             </div>
         </div>
-       
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
     </div>
-<div id="mainContent">
-	<div id="header">技能与作品</div>
 
-	<div id="wrapper">
-		<div id="scroller">
-			<ul>
-			</ul>
-		</div>
-	</div>
+    <div id="mainContent">
+        <div id="header">SKILL</div>
+        <div id="wrapper">
+            <div id="scroller">
+               <!-- 获取json数据添加进来 -->
+            </div>
+            <canvas id="interestCanvas">您的浏览器不支持canvas赶紧去升级吧</canvas>
+        </div>
 
-	<div id="footer">
-		<div class="button"  id="product">
-			<span class="iconfont">
-				&#xe673;
-			</span>
-		<div>技能</div>
-		</div>
-		<div class="button" id="work">
-			<span class="iconfont">
-				&#xe685;
-			</span>
-		<div>作品</div>
-		</div>
-		<div class="button" id="skill">
-			<span class="iconfont">
-				&#xe617;
-			</span>
-		<div>兴趣</div>
-		</div>
-		<div class="button" id="project">
-			<span class="iconfont">
-				&#xe673;
-			</span>
-		<div>经历</div>
-		</div>
-		<div class="button" id="my">
-			<span class="iconfont">
-				&#xe65c;
-			</span>
-		<div>我的</div>
-		</div>
-	</div>
-</div>	
+        <div id="footer">
+            <div class="button" id="skill">技能</div>
+            <div class="button" id="project">项目</div>
+            <div class="button" id="work">经历</div>
+            <div class="button" id="interest">兴趣</div>
+            <div class="button" id="mine">我的</div>
+        </div>
+    </div>
 	<script type="text/javascript" src="js/index.js"></script>
 </body>
 </html>

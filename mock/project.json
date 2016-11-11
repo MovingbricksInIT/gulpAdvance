@@ -1,38 +1,16 @@
-﻿[
+[
 	{
-		"category":"企业网站",
-		"name":"和瑞控股",
-		"url":"http://www.horays.com/",
-		"image":"images/horays.png",
-		"description":"和瑞控股公司的官方网站，详细介绍了和瑞控股公司的主要情况",
-		"detail":"项目耗时3周，主要处理前端页面及程序嵌套，当时并未要求移动端适配，故该网站只适应于PC端应用",
-		"tech":"Html、Css2、Coldfusion等"
+		"name":"早集网（PC端 已上线）",
+		"image":"images/zaoji.png",
+		"description":"是一家服务于8亿农民的村镇O2O电商平台。将中国现有的村镇小卖铺，升级成为早集网线下体验店，通过体验店帮助农民实现网上购物和网上销售农产品。面向农村消费市场开设的早集网商城，采用独特的双向O2O模式，帮助解决农民“买难”、“卖难”的问题，其确立的“六位一体”的战略规划体系，农村电商平台，可使农民不出家门通过网上赶集即购买到质优价廉的商品，获得全新的互联网消费。",
+		"skill":"<p class='projectTxt'>应用技术</p><p>1. 标准HTML及CSS页面布局；</p><p>2. 适应各种屏幕分辨率；</p><p>3. 兼容各种浏览器</p><p>4. 应用最新CSS3和HTML5技术</p>",
+		"total":"<p class='projectTxt'>项目总结</p><p>1.接触到前端这个神奇的行业，掌握前端的语言，可以进行自主开发；</p><p>2.熟悉了动态网站的开发，能够配合后台开发人员进行修改及更新；</p><p>3.在项目发布之后，协助开发人员解决前端问题，积累经验；</p><p>4.掌握使用前段基本的语言编辑工具；</p><p>5.熟练使用photoshop图片切割工具；</p>"
 	},
 	{
-		"category":"平台门户",
-		"name":"珍诚医药",
-		"url":"http://www.zc511.com/",
-		"image":"images/zc511.png",
-		"description":"医药电商先锋平台，国内医药电商B2B第一平台，年销售额超25亿",
-		"detail":"长期维护，功能迭代，包括平台整体UI改进以及功能模块的增加与性能的优化",
-		"tech":"Html、Css2、Javascript、Jquery、Java等"
-	},
-	{
-		"category":"平台门户",
-		"name":"网上药博会",
-		"url":"http://www.53118.com/",
-		"images":"images/53118.png",
-		"description":"网上药博会，网上药品及药企展览平台",
-		"detail":"项目初建耗时4月，从需求到页面设计，从页面设计到前端实现，从页面实现到功能开发和集成，从本地测试到平台上线等全程处理",
-		"tech":"Html、Css2、Javascript、Jquery、Coldfusion等"
-	},
-	{
-		"category":"移动平台",
-		"name":"政教通",
-		"url":"http://www.zhengjiaotong.com/",
-		"images":"images/zhengjiaotong.png",
-		"description":"儿童健康成长护航者",
-		"detail":"项目初建耗时3月，主要包括数据支撑平台的建设、移动端Hybrid模式的应用及开发",
-		"tech":"Html5、Css3、Jquery、AngularJs、Java等"
+		"name":"早集（webAPP 已上线）",
+		"image":"images/zaojiwarp.png",
+		"description":"",
+		"skill":"<p class='projectTxt'>应用技术</p><p>1. 采用Flex弹性伸缩布局</p><p>2. 首页年化收益数据模块，采用ajax获取后台数据；</p><p>3. 分类信息模块图标用Iconfont实现页面资源优化；</p><p>4. 使用git版本管理工具；</p><p>5. 使用zepto对事件进行处理，提升用户体验效果；</p>",
+		"total":"<p class='projectTxt'>项目总结</p><p>1. 对移动端进行了项目实践，并且认识到团队进行模块化开发的效率;</p><p>2.对bootstrap认识更加深刻；</p><p>3.整个项目运用到了iScroll类库，实现下拉刷新的功能；</p>"
 	}
 ]
